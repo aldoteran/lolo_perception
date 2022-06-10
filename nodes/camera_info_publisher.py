@@ -15,7 +15,7 @@ import rospy
 import yaml
 from sensor_msgs.msg import CameraInfo
 
-def yaml_to_CameraInfo(yaml_fname, camera_link_id):
+def yaml_to_CameraInfo(yaml_file, camera_link_id):
     """
     Parse a yaml file containing camera calibration data (as produced by
     rosrun camera_calibration cameracalibrator.py) into a
@@ -32,7 +32,7 @@ def yaml_to_CameraInfo(yaml_fname, camera_link_id):
         data
     """
     # Load data from file
-    with open(yaml_fname, "r") as file_handle:
+    with open(yaml_file, "r") as file_handle:
         calib_data = yaml.load(file_handle)
     # Parse
     camera_info_msg = CameraInfo()
@@ -43,14 +43,14 @@ def yaml_to_CameraInfo(yaml_fname, camera_link_id):
     camera_info_msg.D = calib_data["distortion_coefficients"]["data"]
     camera_info_msg.R = calib_data["rectification_matrix"]["data"]
     camera_info_msg.P = calib_data["projection_matrix"]["data"]
-    camera_info_msg.distortion_model = calib_data["distortion_model"]
+    camera_info_msg.distortion_model = calib_data["camera_model"]
     return camera_info_msg
 
 if __name__ == "__main__":
 
     # Get calibration file and camera link ID from the rosparam server.
-    yaml_file = rospy.get_param("~calibration_yaml")
-    camera_link_id = rospy.get_param("~camera_link_id")
+    yaml_file = rospy.get_param("calibration_file")
+    camera_link_id = rospy.get_param("camera_link_id")
 
     # Parse yaml file.
     camera_info_msg = yaml_to_CameraInfo(yaml_file, camera_link_id)
