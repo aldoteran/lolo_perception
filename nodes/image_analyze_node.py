@@ -1236,7 +1236,7 @@ if __name__ == "__main__":
     #imgLabelNode.analyzeRosbagImages(datasetPath, labelFile, rosbagPath, "lolo_camera/image_raw", startFrame=1200, analyzeImages=False)
 
     # For Aldo
-    cameraYaml = "camera_calibration_data/sam_calibrations/csi_cam_1.yaml" # In /camera_calibration_data
+    cameraYaml = "camera_calibration_data/csi_cam_1.yaml" # In /camera_calibration_data
 
     # Lab test
     #rosbagFile = "2022-06-08-17-44-05_lab_docking_station.bag" # In /rosbags

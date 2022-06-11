@@ -1,5 +1,5 @@
 <launch>
-    <group ns="/sam/perception/csi_cam_0">
+    <group ns="/sam/perception/csi_cam_0/camera/">
         <param name="calibration_file" type="string"
             value="$(find lolo_perception)/camera_calibration_data/csi_cam_0.yaml"/>
         <param name="camera_link_id" type="string"
@@ -9,7 +9,7 @@
             type="camera_info_publisher.py" />
     </group>
 
-    <group ns="/sam/perception/csi_cam_1">
+    <group ns="/sam/perception/csi_cam_1/camera/">
         <param name="calibration_file" type="string"
             value="$(find lolo_perception)/camera_calibration_data/csi_cam_1.yaml"/>
         <param name="camera_link_id" type="string"
@@ -19,7 +19,7 @@
             type="camera_info_publisher.py" />
     </group>
 
-    <group ns="/sam/perception/csi_cam_2">
+    <group ns="/sam/perception/csi_cam_2/camera/">
         <param name="calibration_file" type="string"
             value="$(find lolo_perception)/camera_calibration_data/csi_cam_2.yaml"/>
         <param name="camera_link_id" type="string"
