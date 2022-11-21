@@ -68,11 +68,11 @@ class PerceptionNode:
         """
         from lolo_perception.camera_model import Camera
         # Using only P (D=0), we should subscribe to the rectified image topic
-        camera = Camera(cameraMatrix=np.array(msg.P, dtype=np.float32).reshape((3,4))[:, :3], 
+        camera = Camera(cameraMatrix=np.array(msg.P, dtype=np.float32).reshape((3,4))[:, :3],
                         distCoeffs=np.zeros((1,4), dtype=np.float32),
                         resolution=(msg.height, msg.width))
         # Using K and D, we should subscribe to the raw image topic
-        #_camera = Camera(cameraMatrix=np.array(msg.K, dtype=np.float32).reshape((3,3)), 
+        #_camera = Camera(cameraMatrix=np.array(msg.K, dtype=np.float32).reshape((3,3)),
         #                distCoeffs=np.array(msg.D, dtype=np.float32),
         #                resolution=(msg.height, msg.width))
         self.camera = camera
@@ -86,10 +86,10 @@ class PerceptionNode:
     def _cameraPoseSub(self, msg):
         self._cameraPoseMsg = msg
 
-    def update(self, 
-               imgColor, 
-               estDSPose=None, 
-               publishPose=True, 
+    def update(self,
+               imgColor,
+               estDSPose=None,
+               publishPose=True,
                publishCamPose=False,
                publishImages=True):
 
@@ -97,10 +97,10 @@ class PerceptionNode:
         cameraPoseVector = None
         if self._cameraPoseMsg:
             t, r = poseToVector(self._cameraPoseMsg)
-            #t *= 0 # we disregard translation, ds has to be estimated 
+            #t *= 0 # we disregard translation, ds has to be estimated
             cameraPoseVector = np.array(list(t) + list(r))
             self._cameraPoseMsg = None
-        
+
 
         start = time.time()
 
@@ -108,8 +108,8 @@ class PerceptionNode:
          poseAquired,
          candidates,
          processedImg,
-         poseImg) = self.perception.estimatePose(imgColor, 
-                                                 estDSPose, 
+         poseImg) = self.perception.estimatePose(imgColor,
+                                                 estDSPose,
                                                  estCameraPoseVector=cameraPoseVector)
 
         if dsPose and dsPose.covariance is None:
@@ -119,44 +119,44 @@ class PerceptionNode:
         virtualHZ = 1./elapsed
         hz = min(self.hz, virtualHZ)
 
-        cv.putText(poseImg, 
-                   "FPS {}".format(round(hz, 1)), 
-                   (int(poseImg.shape[1]*4/5), 25), 
-                   cv.FONT_HERSHEY_SIMPLEX, 
-                   0.7, 
-                   color=(0,255,0), 
-                   thickness=2, 
+        cv.putText(poseImg,
+                   "FPS {}".format(round(hz, 1)),
+                   (int(poseImg.shape[1]*4/5), 25),
+                   cv.FONT_HERSHEY_SIMPLEX,
+                   0.7,
+                   color=(0,255,0),
+                   thickness=2,
                    lineType=cv.LINE_AA)
 
-        cv.putText(poseImg, 
-                   "Virtual FPS {}".format(round(virtualHZ, 1)), 
-                   (int(poseImg.shape[1]*4/5), 45), 
-                   cv.FONT_HERSHEY_SIMPLEX, 
-                   0.7, 
-                   color=(0,255,0), 
-                   thickness=2, 
+        cv.putText(poseImg,
+                   "Virtual FPS {}".format(round(virtualHZ, 1)),
+                   (int(poseImg.shape[1]*4/5), 45),
+                   cv.FONT_HERSHEY_SIMPLEX,
+                   0.7,
+                   color=(0,255,0),
+                   thickness=2,
                    lineType=cv.LINE_AA)
 
         timeStamp = rospy.Time.now()
         # publish pose if pose has been aquired
         if publishPose and poseAquired and dsPose.detectionCount >= 10: # TODO: set to 10
             # publish transform
-            dsTransform = vectorToTransform("lolo_camera_link", 
-                                            "docking_station/feature_model_estimated_link", 
-                                            dsPose.translationVector, 
-                                            dsPose.rotationVector, 
+            dsTransform = vectorToTransform("sam/camera_front_right_link",
+                                            "docking_station_link",
+                                            dsPose.translationVector,
+                                            dsPose.rotationVector,
                                             timeStamp=timeStamp)
             self.transformPublisher.publish(tf.msg.tfMessage([dsTransform]))
 
             # Publish placement of the light sources as a PoseArray (published in the docking_station frame)
-            pArray = featurePointsToMsg("docking_station/feature_model_estimated_link", self.perception.featureModel.features, timeStamp=timeStamp)
+            pArray = featurePointsToMsg("docking_station_link", self.perception.featureModel.features, timeStamp=timeStamp)
             self.featurePosesPublisher.publish(pArray)
-            
+
             # publish estimated pose
             self.posePublisher.publish(
-                vectorToPose("lolo_camera_link", 
-                dsPose.translationVector, 
-                dsPose.rotationVector, 
+                vectorToPose("sam/camera_front_right_link",
+                dsPose.translationVector,
+                dsPose.rotationVector,
                 dsPose.covariance,
                 timeStamp=timeStamp)
                 )
@@ -168,9 +168,9 @@ class PerceptionNode:
             if publishCamPose:
                 print("!!!Publishing cam pose with covariance!!!")
                 self.camPosePublisher.publish(
-                    vectorToPose("docking_station_link", 
-                    dsPose.camTranslationVector, 
-                    dsPose.camRotationVector, 
+                    vectorToPose("docking_station_link",
+                    dsPose.camTranslationVector,
+                    dsPose.camRotationVector,
                     dsPose.calcCamPoseCovariance(),
                     timeStamp=timeStamp)
                     )
@@ -199,7 +199,7 @@ class PerceptionNode:
         estDSPose = None
 
         while not rospy.is_shutdown():
-            
+
             if self.imageMsg:
                 try:
                     imgColor = self.bridge.imgmsg_to_cv2(self.imageMsg, 'bgr8')
@@ -212,9 +212,9 @@ class PerceptionNode:
                     self.imageMsg = None
                     (dsPose,
                      poseAquired,
-                     candidates) = self.update(imgColor, 
-                                                estDSPose=estDSPose, 
-                                                publishPose=publishPose, 
+                     candidates) = self.update(imgColor,
+                                                estDSPose=estDSPose,
+                                                publishPose=publishPose,
                                                 publishCamPose=publishCamPose,
                                                 publishImages=publishImages)
 
@@ -235,7 +235,7 @@ class PerceptionNode:
 
                 if self.perception.processedImg is not None:
                     show = True
-                    
+
                     img = self.perception.processedImg
                     if img.shape[0] > 720:
                         cv.resize(img, (1280,720))
@@ -257,7 +257,7 @@ if __name__ == '__main__':
     #parser = argparse.ArgumentParser(description='Perception node')
     #parser.add_argument('-feature_model_yaml', type=str, default="big_prototype_5.yaml",
     #                    help='')
-    
+
     #args = parser.parse_args()
 
     featureModelYaml = rospy.get_param("~feature_model_yaml")

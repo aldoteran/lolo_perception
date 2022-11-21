@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 
 import rospy
+import tf
 from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseWithCovarianceStamped, PoseStamped
 
 class PathPublisher:
     def __init__(self, poseTopic="/pose_topic", pathTopic="/pose/path"):
-        print("POSEPSOEPSOPOSEPOSEPO")
         rospy.Subscriber(poseTopic, PoseWithCovarianceStamped, self._poseCallback)
         self.path = Path()
         self.pub = rospy.Publisher(pathTopic, Path, queue_size=10)
+        self.broadcaster = tf.TransformBroadcaster()
 
     def _poseCallback(self, msg):
         p = PoseStamped()
@@ -17,7 +18,13 @@ class PathPublisher:
         p.pose = msg.pose.pose
         self.path.header = msg.header
         self.path.poses.append(p)
-        print("ASLSALASLLASLHSALSH")
+
+        # Publish TF.
+        # self.broadcaster.sendTransform(msg.pose.pose.position,
+                                       # msg.pose.pose.orientation,
+                                       # msg.header.stamp,
+                                       # "docking_station_link",
+                                       # "/sam/camera_front_right_link")
 
     def publish(self):
         self.pub.publish(self.path)

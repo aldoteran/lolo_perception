@@ -1,5 +1,5 @@
 model_name: kberg_docking_station
-features: [[0, 0, -0.4], # Center.
+features: [[0, 0, -0.35], # Center.
            [-0.357, -0.3, -0.03], # Top left.
            [0.357, -0.3, -0.03], # Top right.
            [0.357, 0.3, -0.03], # Botttom right.
