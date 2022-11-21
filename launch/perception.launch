@@ -9,7 +9,7 @@
   <arg name="rviz" default="false"/>
 
   <!--Some parameters for the perception node-->
-  <arg name="feature_model_yaml" default="big_prototype_5.yaml" />
+  <arg name="feature_model_yaml" default="visual_docking_station.yaml" />
   <arg name="hats_mode" default="valley" /> <!--peak, valley or simple-->
 
   <node name="perception_node" pkg="lolo_perception" type="perception_node.py" output="screen" >
@@ -20,12 +20,10 @@
     <param name="hats_mode" value="$(arg hats_mode)"/>
     <param name="pose_feedback" value="$(arg pose_feedback)"/>
 
-    <!--<remap from="/lolo_camera/image_rect_color"-->
-        <!--to="/sam/perception/csi_cam_2/throttled/image_rect_color" if="$(eval arg('sam') == true)"/>-->
-    <remap from="/lolo_camera/image_rect_color"
-        to="/camera1/video_source/raw" if="$(eval arg('sam') == true)"/>
     <remap from="/lolo_camera/camera_info"
         to="/sam/perception/csi_cam_2/camera/camera_info" if="$(eval arg('sam') == true)"/>
+    <remap from="/lolo_camera/image_rect_color"
+        to="/sam/perception/csi_cam_2/camera/image_color" if="$(eval arg('sam') == true)"/>
 
     <!--<remap from="/lolo_camera/image_rect_color"-->
         <!--to="/sam/perception/csi_cam_2/camera/image_rect_color" if="$(eval arg('sam') == true)"/>-->
