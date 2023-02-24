@@ -1,15 +1,16 @@
 <launch>
   <arg name="video_device" default="false" /> <!--Use video device online-->
-  <arg name="perspective" default="false" /> <!--None, camera or dockingstation-->
+  <arg name="perspective" default="dockingstation" /> <!--None, camera or dockingstation-->
   <arg name="publish_path" default="true" /> <!--if true, perspective has to be given-->
   <arg name="sim" default="false" /> <!-- When running simulation, some topic needs to be remapped-->
   <arg name="hz" default="15"/>
   <arg name="pose_feedback" default="true"/>
   <arg name="cv_show" default="false"/>
   <arg name="rviz" default="false"/>
+  <arg name="sam" default="true"/>
 
   <!--Some parameters for the perception node-->
-  <arg name="feature_model_yaml" default="big_prototype_5.yaml" />
+  <arg name="feature_model_yaml" default="visual_docking_station.yaml" />
   <arg name="hats_mode" default="valley" /> <!--peak, valley or simple-->
 
   <node name="perception_node" pkg="lolo_perception" type="perception_node.py" output="screen" >
