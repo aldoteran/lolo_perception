@@ -20,12 +20,16 @@
     <param name="hats_mode" value="$(arg hats_mode)"/>
     <param name="pose_feedback" value="$(arg pose_feedback)"/>
 
+    <param name="right_image_topic" value="/sam/perception/csi_cam_1/camera/image_color"/>
+    <param name="left_image_topic" value="/sam/perception/csi_cam_2/camera/image_color"/>
+    <remap from="/lolo_camera/camera_info" to="/sam/perception/csi_cam_1/camera/camera_info"/>
+
     <!--<remap from="/lolo_camera/image_rect_color"-->
         <!--to="/sam/perception/csi_cam_2/throttled/image_rect_color" if="$(eval arg('sam') == true)"/>-->
-    <remap from="/lolo_camera/image_rect_color"
-        to="/camera1/video_source/raw" if="$(eval arg('sam') == true)"/>
-    <remap from="/lolo_camera/camera_info"
-        to="/sam/perception/csi_cam_2/camera/camera_info" if="$(eval arg('sam') == true)"/>
+    <!--<remap from="/lolo_camera/image_rect_color"-->
+        <!--to="/camera1/video_source/raw" if="$(eval arg('sam') == true)"/>-->
+    <!--<remap from="/lolo_camera/camera_info"-->
+        <!--to="/sam/perception/csi_cam_1/camera/camera_info" if="$(eval arg('sam') == true)"/>-->
 
     <!--<remap from="/lolo_camera/image_rect_color"-->
         <!--to="/sam/perception/csi_cam_2/camera/image_rect_color" if="$(eval arg('sam') == true)"/>-->

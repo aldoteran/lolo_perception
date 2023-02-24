@@ -35,7 +35,14 @@ class PerceptionNode:
 
         self.imageMsg = None
         self.bridge = CvBridge()
-        self.imgSubsciber = rospy.Subscriber('lolo_camera/image_rect_color', Image, self._imgCallback)
+
+        # FIXME(aldoteran): gonna switch btwn images till we find the station.
+        self.right_image_topic = rospy.get_param("~right_image_topic")
+        self.left_image_topic = rospy.get_param("~left_image_topic")
+        # Start with right camera.
+        self.imgSubscriber = rospy.Subscriber(self.right_image_topic, Image, self._imgCallback)
+        # Flag to know whether its the right camera we're using/
+        self.is_right_image = True
 
         # publish some images for visualization
         self.imgProcPublisher = rospy.Publisher('lolo_camera/image_processed', Image, queue_size=1)
@@ -154,7 +161,7 @@ class PerceptionNode:
 
             # publish estimated pose
             self.posePublisher.publish(
-                vectorToPose("sam/camera_front_right_link",
+                vectorToPose(self.imageMsg.header.frame_id,
                 dsPose.translationVector,
                 dsPose.rotationVector,
                 dsPose.covariance,
@@ -188,6 +195,21 @@ class PerceptionNode:
             # otherwise we publish all candidates
             self.associatedImagePointsPublisher.publish(lightSourcesToMsg(candidates, timeStamp=timeStamp))
 
+        # FIXME(aldot): Switch camera if no detection was done.
+        if not poseAquired:
+            # Unregister and resubscribe to other image topic.
+            self.imgSubscriber.unregister()
+            if self.is_right_image:
+                rospy.loginfo("Could not find DS on right camera, switching to left...")
+                self.imgSubscriber = rospy.Subscriber(self.left_image_topic,
+                                             Image, self._imgCallback)
+                self.is_right_image = False
+            else:
+                rospy.loginfo("Could not find DS on left camera, switching to right...")
+                self.imgSubscriber = rospy.Subscriber(self.right_image_topic,
+                                             Image, self._imgCallback)
+                self.is_right_image = True
+
         return dsPose, poseAquired, candidates
 
     def run(self, poseFeedback=True, publishPose=True, publishCamPose=False, publishImages=True):
@@ -209,7 +231,6 @@ class PerceptionNode:
                     if not poseFeedback:
                         estDSPose = None
 
-                    self.imageMsg = None
                     (dsPose,
                      poseAquired,
                      candidates) = self.update(imgColor,
@@ -217,6 +238,7 @@ class PerceptionNode:
                                                 publishPose=publishPose,
                                                 publishCamPose=publishCamPose,
                                                 publishImages=publishImages)
+                    self.imageMsg = None
 
                     if not poseAquired:
                         estDSPose = None
