@@ -67,6 +67,9 @@ class PerceptionNode:
         self._cameraPoseMsg = None
         self.cameraPoseSub = rospy.Subscriber("lolo/camera/pose", PoseWithCovarianceStamped, self._cameraPoseSub)
 
+        # FIXME(aldoteran): track the current frame_id being used.
+        self.camera_frame_id = "sam/camera_front_right_link"
+
     def _getCameraCallback(self, msg):
         """
         Use either K and D or just P
@@ -148,7 +151,7 @@ class PerceptionNode:
         # publish pose if pose has been aquired
         if publishPose and poseAquired and dsPose.detectionCount >= 10: # TODO: set to 10
             # publish transform
-            dsTransform = vectorToTransform("sam/camera_front_right_link",
+            dsTransform = vectorToTransform(self.camera_frame_id,
                                             "docking_station_link",
                                             dsPose.translationVector,
                                             dsPose.rotationVector,
@@ -203,11 +206,13 @@ class PerceptionNode:
                 rospy.loginfo("Could not find DS on right camera, switching to left...")
                 self.imgSubscriber = rospy.Subscriber(self.left_image_topic,
                                              Image, self._imgCallback)
+                self.camera_frame_id = "sam/camera_front_left_link"
                 self.is_right_image = False
             else:
                 rospy.loginfo("Could not find DS on left camera, switching to right...")
                 self.imgSubscriber = rospy.Subscriber(self.right_image_topic,
                                              Image, self._imgCallback)
+                self.camera_frame_id = "sam/camera_front_right_link"
                 self.is_right_image = True
 
         return dsPose, poseAquired, candidates
