@@ -68,7 +68,7 @@ class PerceptionNode:
         self.cameraPoseSub = rospy.Subscriber("lolo/camera/pose", PoseWithCovarianceStamped, self._cameraPoseSub)
 
         # FIXME(aldoteran): track the current frame_id being used.
-        self.camera_frame_id = "sam/camera_front_right_link"
+        self.camera_frame_id = "sam/camera_front_right_link/perception"
 
     def _getCameraCallback(self, msg):
         """
@@ -206,13 +206,13 @@ class PerceptionNode:
                 rospy.loginfo("Could not find DS on right camera, switching to left...")
                 self.imgSubscriber = rospy.Subscriber(self.left_image_topic,
                                              Image, self._imgCallback)
-                self.camera_frame_id = "sam/camera_front_left_link"
+                self.camera_frame_id = "sam/camera_front_left_link/perception"
                 self.is_right_image = False
             else:
                 rospy.loginfo("Could not find DS on left camera, switching to right...")
                 self.imgSubscriber = rospy.Subscriber(self.right_image_topic,
                                              Image, self._imgCallback)
-                self.camera_frame_id = "sam/camera_front_right_link"
+                self.camera_frame_id = "sam/camera_front_right_link/perception"
                 self.is_right_image = True
 
         return dsPose, poseAquired, candidates
