@@ -176,7 +176,7 @@ class PerceptionNode:
                 self.mahalanobisDistPub.publish(Float32(dsPose.mahaDist))
 
             if publishCamPose:
-                print("!!!Publishing cam pose with covariance!!!")
+                # print("!!!Publishing cam pose with covariance!!!")
                 self.camPosePublisher.publish(
                     vectorToPose("docking_station_link",
                     dsPose.camTranslationVector,

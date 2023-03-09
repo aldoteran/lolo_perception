@@ -19,23 +19,23 @@ def plotPoseImageInfo(poseImg,
                       fixedAxis=False):
 
 
-    cv.putText(poseImg, 
-               titleText, 
-               (int(poseImg.shape[1]/2.5), 45), 
-               cv.FONT_HERSHEY_SIMPLEX, 
-               2, 
-               color=(255,0,255), 
-               thickness=2, 
+    cv.putText(poseImg,
+               titleText,
+               (int(poseImg.shape[1]/2.5), 45),
+               cv.FONT_HERSHEY_SIMPLEX,
+               2,
+               color=(255,0,255),
+               thickness=2,
                lineType=cv.LINE_AA)
 
 
-    cv.putText(poseImg, 
-               poseEstMethod, 
-               (int(poseImg.shape[1]/2.), 70), 
-               cv.FONT_HERSHEY_SIMPLEX, 
-               1, 
-               color=(0,255,255), 
-               thickness=2, 
+    cv.putText(poseImg,
+               poseEstMethod,
+               (int(poseImg.shape[1]/2.), 70),
+               cv.FONT_HERSHEY_SIMPLEX,
+               1,
+               color=(0,255,255),
+               thickness=2,
                lineType=cv.LINE_AA)
 
     validOrientation = False
@@ -53,21 +53,21 @@ def plotPoseImageInfo(poseImg,
             cv.drawContours(poseImg, [roiCnt], -1, (100,100,100), 3)
         if roiCntUpdated is not None:
             cv.drawContours(poseImg, [roiCntUpdated], -1, roiColor, 3)
-            
-            cv.putText(poseImg, 
-                       "#{}".format(dsPose.detectionCount), 
-                       (roiCntUpdated[0][0]-10, roiCntUpdated[0][1]-10), 
-                       cv.FONT_HERSHEY_SIMPLEX, 
-                       fontScale=1, 
-                       thickness=2, 
+
+            cv.putText(poseImg,
+                       "#{}".format(dsPose.detectionCount),
+                       (roiCntUpdated[0][0]-10, roiCntUpdated[0][1]-10),
+                       cv.FONT_HERSHEY_SIMPLEX,
+                       fontScale=1,
+                       thickness=2,
                        color=(0,255,0))
 
-            cv.putText(poseImg, 
-                       "{}/{}".format(dsPose.attempts, dsPose.combinations), 
-                       (roiCntUpdated[3][0]-10, roiCntUpdated[3][1]+30), 
-                       cv.FONT_HERSHEY_SIMPLEX, 
-                       fontScale=1, 
-                       thickness=2, 
+            cv.putText(poseImg,
+                       "{}/{}".format(dsPose.attempts, dsPose.combinations),
+                       (roiCntUpdated[3][0]-10, roiCntUpdated[3][1]+30),
+                       cv.FONT_HERSHEY_SIMPLEX,
+                       fontScale=1,
+                       thickness=2,
                        color=(255,0,255))
 
 
@@ -80,7 +80,7 @@ def plotPoseImageInfo(poseImg,
             yStart = roiCntUpdated[2][1]
             xEnd = xStart
             yEnd = roiCntUpdated[1][1]
-            
+
             cv.line(poseImg, (xStart, yStart), (xEnd, int(mahaDistRatio*(yEnd - yStart)) + yStart), (0,0,255), 10)
             """
 
@@ -88,48 +88,48 @@ def plotPoseImageInfo(poseImg,
             yStart = roiCntUpdated[2][1]+2
             xEnd = xStart + 10
             yEnd = roiCntUpdated[1][1]
-            
+
             cv.rectangle(poseImg, (xStart, yStart), (xEnd, int(mahaDistRatio*(yEnd - yStart)) + yStart), color=(0,0,255), thickness=-1)
         if dsPose:
-            plotAxis(poseImg, 
-                    dsPose.translationVector, 
-                    dsPose.rotationVector, 
-                    camera, 
-                    featureModel.features, 
+            plotAxis(poseImg,
+                    dsPose.translationVector,
+                    dsPose.rotationVector,
+                    camera,
+                    featureModel.features,
                     featureModel.maxRad, # scaling for the axis shown
                     color=axisColor,
                     thickness=5,
-                    fixedAxis=fixedAxis) 
-            
+                    fixedAxis=fixedAxis)
+
             # Some reprojection uncertainty stuff
-            cv.putText(poseImg, 
-                      "RMSE: {} < {}".format(round(dsPose.rmse, 2), round(dsPose.rmseMax, 2)), 
-                      (20, 200), 
-                      cv.FONT_HERSHEY_SIMPLEX, 
-                      .8, 
-                      color=(0,255,0), 
-                      thickness=2, 
+            cv.putText(poseImg,
+                      "RMSE: {} < {}".format(round(dsPose.rmse, 2), round(dsPose.rmseMax, 2)),
+                      (20, 200),
+                      cv.FONT_HERSHEY_SIMPLEX,
+                      .8,
+                      color=(0,255,0),
+                      thickness=2,
                       lineType=cv.LINE_AA)
 
-            cv.putText(poseImg, 
-                      "RMSE certainty: {}".format(round(1-dsPose.rmse/dsPose.rmseMax, 2)), 
-                      (20, 220), 
-                      cv.FONT_HERSHEY_SIMPLEX, 
-                      .8, 
-                      color=(0,255,0), 
-                      thickness=2, 
+            cv.putText(poseImg,
+                      "RMSE certainty: {}".format(round(1-dsPose.rmse/dsPose.rmseMax, 2)),
+                      (20, 220),
+                      cv.FONT_HERSHEY_SIMPLEX,
+                      .8,
+                      color=(0,255,0),
+                      thickness=2,
                       lineType=cv.LINE_AA)
 
-            cv.putText(poseImg, 
-                      "Err certainty: {}".format(round(dsPose.reprErrMinCertainty(), 2)), 
-                      (20, 240), 
-                      cv.FONT_HERSHEY_SIMPLEX, 
-                      .8, 
-                      color=(0,255,0), 
-                      thickness=2, 
+            cv.putText(poseImg,
+                      "Err certainty: {}".format(round(dsPose.reprErrMinCertainty(), 2)),
+                      (20, 240),
+                      cv.FONT_HERSHEY_SIMPLEX,
+                      .8,
+                      color=(0,255,0),
+                      thickness=2,
                       lineType=cv.LINE_AA)
-            
-            
+
+
 
     if dsPose:
         """
@@ -137,33 +137,33 @@ def plotPoseImageInfo(poseImg,
         coneX = np.rad2deg(np.arctan(abs(dsPose.translationVector[0]) / abs(dsPose.translationVector[2])))
         coneY = np.rad2deg(np.arctan(abs(dsPose.translationVector[1]) / abs(dsPose.translationVector[2])))
         org = 10, camera.resolution[0]-10
-        cv.putText(poseImg, 
-                    "Cone angle x: {}, y: {}".format(round(coneX), round(coneY)), 
-                    org, 
-                    cv.FONT_HERSHEY_SIMPLEX, 
-                    fontScale=1, 
-                    thickness=2, 
+        cv.putText(poseImg,
+                    "Cone angle x: {}, y: {}".format(round(coneX), round(coneY)),
+                    org,
+                    cv.FONT_HERSHEY_SIMPLEX,
+                    fontScale=1,
+                    thickness=2,
                     color=(0,0,255))
         """
         #plotMaxReprojection(poseImg, dsPose)
         plotErrorEllipses(poseImg, dsPose)
-        plotPoseInfo(poseImg, 
-                    dsPose.translationVector, 
+        plotPoseInfo(poseImg,
+                    dsPose.translationVector,
                     dsPose.rotationVector,
                     yawColor=(0,255,0) if validYaw else (0,0,255),
                     pitchColor=(0,255,0) if validPitch else (0,0,255),
                     rollColor=(0,255,0) if validRoll else (0,0,255))
 
-        plotPosePoints(poseImg, 
-                    dsPose.translationVector, 
-                    dsPose.rotationVector, 
-                    camera, 
-                    featureModel.features, 
+        plotPosePoints(poseImg,
+                    dsPose.translationVector,
+                    dsPose.rotationVector,
+                    camera,
+                    featureModel.features,
                     color=(0, 0, 255))
         plotPoints(poseImg, [ls.center for ls in dsPose.associatedLightSources], (255, 0, 0), radius=1)
 
     plotCrosshair(poseImg, camera)
-    
+
 
     # progress bar for light source tracker and aquiring pose
     xStart = camera.resolution[1]-30
@@ -188,7 +188,7 @@ def plotErrorEllipses(img, dsPose, color=(0,0,255), displayReferenceSphere=False
         sigmaU2 = sigma**2*fx**2*(X**2 + Z**2)/Z**4
         sigmaV2 = sigma**2*fy**2*(Y**2 + Z**2)/Z**4
         sigmaUV2 = sigma**2*fx*fy*X*Y/Z**4
-        pixelCovariance = np.array([[sigmaU2, sigmaUV2], 
+        pixelCovariance = np.array([[sigmaU2, sigmaUV2],
                                     [sigmaUV2, sigmaV2]])
 
         projPoint = projectPoints(dsPose.translationVector, dsPose.rotationVector, dsPose.camera, np.array([[0., 0., 0.]]))[0]
@@ -199,8 +199,8 @@ def plotErrorEllipse(img, center, pixelCovariance, confidence=5.991, color=(0,0,
     lambdas, vs = np.linalg.eig(pixelCovariance)
     l1, l2 = lambdas # variances
     v1, v2 = vs
-    if l2 < 0.25 or l2 < 0.25:
-        print("Variance really low!!!!!!!!!!!!!!!!!!!!!")
+    # if l2 < 0.25 or l2 < 0.25:
+        # print("Variance really low!!!!!!!!!!!!!!!!!!!!!")
 
     if l1 > l2:
         #dir = -1
@@ -220,7 +220,7 @@ def plotErrorEllipse(img, center, pixelCovariance, confidence=5.991, color=(0,0,
         end = center[0]+v[0]*l, center[1]+v[1]*l
         end = int(round(end[0])), int(round(end[1]))
         cv.line(img, center, end, color=color)
-    
+
     cv.ellipse(img, center, (major, minor), -angle, 0, 360, color=color)
 
 def plotMaxReprojection(img, dsPose, color=(0,0,255)):
@@ -240,31 +240,31 @@ def plotAxis(img, translationVector, rotationVector, camera, points, scale, colo
         points = R.from_rotvec(rotationVector).apply(points)
         rotationVector = rotationVector*0
 
-    zDir, _ = cv.projectPoints(np.array([(0.0, 0.0, scale)]), 
-                               rotationVector, 
-                               translationVector, 
-                               camera.cameraMatrix, 
+    zDir, _ = cv.projectPoints(np.array([(0.0, 0.0, scale)]),
+                               rotationVector,
+                               translationVector,
+                               camera.cameraMatrix,
                                camera.distCoeffs)
 
-    yDir, _ = cv.projectPoints(np.array([(0.0, scale, 0.0)]), 
-                               rotationVector, 
-                               translationVector, 
-                               camera.cameraMatrix, 
+    yDir, _ = cv.projectPoints(np.array([(0.0, scale, 0.0)]),
+                               rotationVector,
+                               translationVector,
+                               camera.cameraMatrix,
                                camera.distCoeffs)
 
-    xDir, _ = cv.projectPoints(np.array([(scale, 0.0, 0.0)]), 
-                               rotationVector, 
-                               translationVector, 
-                               camera.cameraMatrix, 
+    xDir, _ = cv.projectPoints(np.array([(scale, 0.0, 0.0)]),
+                               rotationVector,
+                               translationVector,
+                               camera.cameraMatrix,
                                camera.distCoeffs)
 
-    center, _ = cv.projectPoints(np.array([(0.0, 0.0, 0.0)]), 
-                                 rotationVector, 
-                                 translationVector, 
-                                 camera.cameraMatrix, 
+    center, _ = cv.projectPoints(np.array([(0.0, 0.0, 0.0)]),
+                                 rotationVector,
+                                 translationVector,
+                                 camera.cameraMatrix,
                                  camera.distCoeffs)
 
-    center = center[0][0][0], center[0][0][1]   
+    center = center[0][0][0], center[0][0][1]
     for d, c in zip((zDir, yDir, xDir), ((255*opacity,0,0), (0,255*opacity,0), (0,0,255*opacity))):
         cx = center[0]
         cy = center[1]
@@ -276,20 +276,20 @@ def plotAxis(img, translationVector, rotationVector, camera, points, scale, colo
             cv.line(img, point1, point2, c, thickness)
 
 def plotVector(img, vector, translationVector, rotationVector, camera, color=(255,0,0), thickness=2, opacity=1):
-    dir, _ = cv.projectPoints(np.array([vector]), 
-                               rotationVector, 
-                               translationVector, 
-                               camera.cameraMatrix, 
+    dir, _ = cv.projectPoints(np.array([vector]),
+                               rotationVector,
+                               translationVector,
+                               camera.cameraMatrix,
                                camera.distCoeffs)
 
-    center, _ = cv.projectPoints(np.array([(0.0, 0.0, 0.0)]), 
-                                 rotationVector, 
-                                 translationVector, 
-                                 camera.cameraMatrix, 
+    center, _ = cv.projectPoints(np.array([(0.0, 0.0, 0.0)]),
+                                 rotationVector,
+                                 translationVector,
+                                 camera.cameraMatrix,
                                  camera.distCoeffs)
 
 
-    center = center[0][0][0], center[0][0][1] 
+    center = center[0][0][0], center[0][0][1]
     cx = center[0]
     cy = center[1]
     point1 = (int(round(cx)), int(round(cy)))
@@ -310,7 +310,7 @@ def plotPosePointsWithReprojection(img, translationVector, rotationVector, camer
         imgX, imgY = int( round(imgP[0]) ), int( round(imgP[1]) )
         rp = round(np.linalg.norm(rp), 2)
         cv.putText(img, "err: {}".format(rp), (imgX+15, imgY-15), cv.FONT_HERSHEY_SIMPLEX, 0.5, color=color)
-        
+
         projX, projY = int( round(projP[0]) ), int( round(projP[1]) )
         cv.line(img, (imgX, imgY), (projX, projY), color=color)
 
@@ -324,10 +324,10 @@ def plotPoints(img, points, color, radius=1):
             cv.circle(img, (x,y), radius, color, -1)
 
 def projectPoints(translationVector, rotationVector, camera, objPoints):
-    projPoints, _ = cv.projectPoints(objPoints, 
-                                        rotationVector, 
-                                        translationVector, 
-                                        camera.cameraMatrix, 
+    projPoints, _ = cv.projectPoints(objPoints,
+                                        rotationVector,
+                                        translationVector,
+                                        camera.cameraMatrix,
                                         camera.distCoeffs)
     projPoints = np.array([p[0] for p in projPoints])
     return projPoints
@@ -337,7 +337,7 @@ def plotPoseInfo(img, translationVector, rotationVector, yawColor=(0,255,0), pit
     yaw, pitch, roll = R.from_rotvec(rotationVector).as_euler("YXZ")
     yaw, pitch, roll = np.rad2deg(yaw), np.rad2deg(pitch), np.rad2deg(roll)
     org = (20, 25)
-    
+
     if distance < 2:
         unit = "cm"
         distance = round(distance*100, 2)
@@ -364,9 +364,9 @@ def plotPoseInfo(img, translationVector, rotationVector, yawColor=(0,255,0), pit
 
 
 def plotCrosshair(img, camera, color=(0, 0, 255)):
-    center, = projectPoints(np.array([0., 0., 1.]), 
-                            np.array([0., 0., 0.]), 
-                            camera, 
+    center, = projectPoints(np.array([0., 0., 1.]),
+                            np.array([0., 0., 0.]),
+                            camera,
                             np.array([[0., 0., 0.]]))
 
     cx = int(round(center[0]))
@@ -391,10 +391,10 @@ def reprojectionError(translationVector, rotationVector, camera, objPoints, imag
 def undistortImage(img, camera):
     # How to undistort image: https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html
     h, w = img.shape[:2]
-    newcameramtx, roi = cv.getOptimalNewCameraMatrix(camera.cameraMatrix, 
-                                                     camera.distCoeffs, 
-                                                     (w,h), 
-                                                     0, 
+    newcameramtx, roi = cv.getOptimalNewCameraMatrix(camera.cameraMatrix,
+                                                     camera.distCoeffs,
+                                                     (w,h),
+                                                     0,
                                                      (w,h))
 
     imgRect = cv.undistort(img, camera.cameraMatrix, camera.distCoeffs, None, newcameramtx)
@@ -417,7 +417,7 @@ def plotHistogram(img, N, showPeaks=False, showValleys=False, highLightFirstPeak
             if peak >= N:
                 if highlightPeak is not None and peak == highlightPeak+1 or highLightFirstPeakValley and i==len(peaks)-1:
                     peakLine = plt.axvline(peak, ymin=0, ymax=1, c="g", label="peak")
-                elif showPeaks:   
+                elif showPeaks:
                     peakLine = plt.axvline(peak, ymin=0, ymax=hist[peak]/max(hist[N:]), c="g", label="peak")
         if peakLine is not None:
             handles.append(peakLine)
@@ -428,7 +428,7 @@ def plotHistogram(img, N, showPeaks=False, showValleys=False, highLightFirstPeak
             if peak >= N:
                 if highlightPeak is not None and peak == highlightPeak+1 or highLightFirstPeakValley and j==len(valleys)-1:
                     valleyLine = plt.axvline(peak, ymin=0, ymax=1, c="orange", label="valley")
-                elif showValleys:   
+                elif showValleys:
                     valleyLine = plt.axvline(peak, ymin=0, ymax=hist[peak]/max(hist[N:]), c="orange", label="valley")
         if valleyLine is not None:
             handles.append(valleyLine)
@@ -438,7 +438,7 @@ def plotHistogram(img, N, showPeaks=False, showValleys=False, highLightFirstPeak
     if limitAxes:
         plt.xlim([N, 256])
         plt.ylim([0, max(hist[N:])])
-    
+
     plt.ylabel("Frequency")
     plt.xlabel("Intensity")
 
@@ -460,7 +460,7 @@ def regionOfInterest(featurePointsGuess, wMargin, hMargin):
 
         if p[0] < leftMost[0]:
             leftMost = p
-    
+
     topMost[1] -= hMargin
     rightMost[0] += wMargin
     bottomMost[1] += hMargin
@@ -499,11 +499,11 @@ class PoseAndImageUncertaintyEstimator:
         self.camPoseVecsEuler = []
         self.nSamples = nSamples
 
-    def add(self, 
-            translationVec, 
+    def add(self,
+            translationVec,
             rotationVec,
             camTranslationVec,
-            camRotationVec, 
+            camRotationVec,
             assImgPoints):
 
         self.poseVecs.insert(0, list(translationVec) + list(rotationVec))
@@ -546,7 +546,7 @@ class PoseAndImageUncertaintyEstimator:
         return poseCov, camPoseCov
 
     def calcAverage(self):
-        # This only works for small differences in rotation and 
+        # This only works for small differences in rotation and
         # when rotations are not near +-pi
         poseAvg = np.mean(self.poseVecs, axis=0)
         camPoseAvg = np.mean(self.camPoseVecs, axis=0)
