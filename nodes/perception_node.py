@@ -151,7 +151,8 @@ class PerceptionNode:
         # publish pose if pose has been aquired
         if publishPose and poseAquired and dsPose.detectionCount >= 10: # TODO: set to 10
             # publish transform
-            dsTransform = vectorToTransform(self.camera_frame_id,
+            # dsTransform = vectorToTransform(self.camera_frame_id,
+            dsTransform = vectorToTransform(self.imageMsg.header.frame_id + "/perception",
                                             "docking_station_link",
                                             dsPose.translationVector,
                                             dsPose.rotationVector,
