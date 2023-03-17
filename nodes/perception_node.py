@@ -78,13 +78,13 @@ class PerceptionNode:
         """
         from lolo_perception.camera_model import Camera
         # Using only P (D=0), we should subscribe to the rectified image topic
-        camera = Camera(cameraMatrix=np.array(msg.P, dtype=np.float32).reshape((3,4))[:, :3],
-                        distCoeffs=np.zeros((1,4), dtype=np.float32),
-                        resolution=(msg.height, msg.width))
+        # camera = Camera(cameraMatrix=np.array(msg.P, dtype=np.float32).reshape((3,4))[:, :3],
+                        # distCoeffs=np.zeros((1,4), dtype=np.float32),
+                        # resolution=(msg.height, msg.width))
         # Using K and D, we should subscribe to the raw image topic
-        #_camera = Camera(cameraMatrix=np.array(msg.K, dtype=np.float32).reshape((3,3)),
-        #                distCoeffs=np.array(msg.D, dtype=np.float32),
-        #                resolution=(msg.height, msg.width))
+        camera = Camera(cameraMatrix=np.array(msg.K, dtype=np.float32).reshape((3,3)),
+                       distCoeffs=np.array(msg.D, dtype=np.float32),
+                       resolution=(msg.height, msg.width))
         self.camera = camera
 
         # We only want one message

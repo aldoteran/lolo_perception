@@ -1,0 +1,15 @@
+<launch>
+
+    <group ns="/sam/perception/csi_cam_1/camera/">
+        <param name="calibration_file" type="string"
+            value="$(find lolo_perception)/camera_calibration_data/lab_calibs/camera_1.yaml"/>
+            <!--value="$(find lolo_perception)/camera_calibration_data/csi_cam_1.yaml"/>-->
+        <param name="camera_link_id" type="string"
+            value="/sam/camera_front_left_link"/>
+
+        <node name="camera_info_publisher" pkg="lolo_perception"
+            type="camera_info_publisher.py" />
+    </group>
+
+
+</launch>
