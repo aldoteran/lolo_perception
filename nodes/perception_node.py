@@ -21,6 +21,7 @@ from lolo_perception.perception import Perception
 
 class PerceptionNode:
     def __init__(self, featureModel, hz, cvShow=False, hatsMode="valley"):
+        print("Perception Node Lolo Package")
         self.cameraTopic = "lolo_camera"
         self.cameraInfoSub = rospy.Subscriber("lolo_camera/camera_info", CameraInfo, self._getCameraCallback)
         self.camera = None
@@ -28,6 +29,7 @@ class PerceptionNode:
             print("Waiting for camera info to be published")
             rospy.sleep(1)
 
+        print("[PNode] after while")
         self.hz = hz
         self.cvShow = cvShow
 
@@ -69,6 +71,8 @@ class PerceptionNode:
 
         # FIXME(aldoteran): track the current frame_id being used.
         self.camera_frame_id = "sam/camera_front_right_link/perception"
+
+        print("[PNode] end init")
 
     def _getCameraCallback(self, msg):
         """
@@ -227,7 +231,7 @@ class PerceptionNode:
         estDSPose = None
 
         while not rospy.is_shutdown():
-
+            
             if self.imageMsg:
                 try:
                     imgColor = self.bridge.imgmsg_to_cv2(self.imageMsg, 'bgr8')

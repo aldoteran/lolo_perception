@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import time
 import cv2 as cv
 import numpy as np
@@ -242,7 +242,7 @@ def circularKernel(size):
     size - radius of circle
     """
     assert size % 2 == 1, "Must be of uneven size"
-    radius = size/2
+    radius = int(size/2)
     center = (radius, radius)
     kernel = np.zeros((size, size), dtype=np.uint8)
     cv.circle(kernel, center, radius, 1, -1)
@@ -466,7 +466,9 @@ def refineCentroidGradient(gray, contours, ksize=3):
 
     return centroids
 
-def RCF((x,y), r, gray):
+def RCF(coord, r, gray):
+    x = coord[0]
+    y = coord[1]
     I = float(gray[y, x])
 
     mask = np.zeros(gray.shape, dtype=np.uint8)
@@ -481,7 +483,7 @@ def RCF((x,y), r, gray):
 
     return rcf
 
-def RCFS((i, j), rStart, gray, rInc=1, drawImg=None):
+def RCFS(pixelCoord, rStart, gray, rInc=1, drawImg=None):
     """
     Computes the sum of neighbouring pixels at radius R
     Based on section 4.2 in https://www.tdx.cat/bitstream/handle/10803/275990/tmmm1de1.pdf?sequence=5
@@ -494,6 +496,9 @@ def RCFS((i, j), rStart, gray, rInc=1, drawImg=None):
     """
     assert rStart >= 1, "Start radius must be larger than 1"
 
+    i = pixelCoord[0]
+    j = pixelCoord[1]
+    
     def continueCondition(rcfs, maxDiff, n):
         # when the last n samples has had a slope lesser than maxDiff
         # we break
@@ -519,7 +524,7 @@ def RCFS((i, j), rStart, gray, rInc=1, drawImg=None):
     maxDiff = 0#RCF((i,j), r, gray.copy())
     n = 6
     while continueCondition(rcfs, maxDiff, n):
-        rcf = RCF((i,j), r, gray.copy())
+        rcf = RCF([i,j], r, gray.copy())
 
         if rcfs:
             diff = rcf - rcfs[-1]
@@ -701,13 +706,13 @@ def findContourAt(gray, center):
     return foundCnt
 
 def findPeakContourAt(gray, center, offset=None, mode=cv.RETR_EXTERNAL):
-    _, contours, hier = cv.findContours(gray, mode, cv.CHAIN_APPROX_SIMPLE)
+    contours, hier = cv.findContours(gray, mode, cv.CHAIN_APPROX_SIMPLE)
 
 
     if offset is None:
         contoursOffset = [cnt for cnt in contours]
     else:
-        _, contoursOffset, hier = cv.findContours(gray, mode, cv.CHAIN_APPROX_SIMPLE, offset=offset)
+        contoursOffset, hier = cv.findContours(gray, mode, cv.CHAIN_APPROX_SIMPLE, offset=offset)
 
     #contours.sort(key=cv.contourArea, reverse=True)
     #contoursOffset.sort(key=cv.contourArea, reverse=True)

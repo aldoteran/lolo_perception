@@ -560,9 +560,9 @@ class DSPoseEstimator:
             az = 0
         self.rotationVector = R.from_euler("YXZ", (ay, ax, az)).as_rotvec()
 
-        rotMat = R.from_rotvec(self.rotationVector).as_dcm()
+        rotMat = R.from_rotvec(self.rotationVector).as_matrix()
         camTranslationVector = np.matmul(rotMat.transpose(), -translationVector)
-        camRotationVector = R.from_dcm(rotMat.transpose()).as_rotvec()
+        camRotationVector = R.from_matrix(rotMat.transpose()).as_rotvec()
 
         return DSPose(translationVector,
                       rotationVector,
@@ -663,9 +663,9 @@ class DSPoseEstimator:
             az = 0
         self.rotationVector = R.from_euler("YXZ", (ay, ax, az)).as_rotvec()
 
-        rotMat = R.from_rotvec(self.rotationVector).as_dcm()
+        rotMat = R.from_rotvec(self.rotationVector).as_matrix()
         camTranslationVector = np.matmul(rotMat.transpose(), -translationVector)
-        camRotationVector = R.from_dcm(rotMat.transpose()).as_rotvec()
+        camRotationVector = R.from_matrix(rotMat.transpose()).as_rotvec()
 
         return DSPose(translationVector,
                       rotationVector,
@@ -810,7 +810,7 @@ if __name__ =="__main__":
         ax2.legend(["F(x)", "mu", "||g||"])
 
         estCS.cs.translation = pose[:3]
-        estCS.cs.rotation = R.from_rotvec(pose[3:]).as_dcm()
+        estCS.cs.rotation = R.from_rotvec(pose[3:]).as_matrix()
         estCS.drawRelative(ax, camCS.cs, colors=("r",)*3, scale=0.5, alpha=0.5)
 
         print(pose.round(2))

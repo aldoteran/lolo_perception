@@ -94,7 +94,7 @@ def plotReprojection(points, cameraResolution, f, deltaE, rangeMeter, fScale=1./
 
 
 def NEW_calcPoseReprojectionRMSEThreshold(translationVec, rotationVec, camera, featureModel, showImg=False):
-    rotMat = R.from_rotvec(rotationVec).as_dcm()
+    rotMat = R.from_rotvec(rotationVec).as_matrix()
 
     reprErrs = []
     pointsX = []
@@ -150,7 +150,7 @@ def NEW_calcPoseReprojectionRMSEThreshold(translationVec, rotationVec, camera, f
     return maxRMSE
 
 def calcPoseReprojectionThresholds(translationVec, rotationVec, camera, featureModel):
-    rotMat = R.from_rotvec(rotationVec).as_dcm()
+    rotMat = R.from_rotvec(rotationVec).as_matrix()
 
     reprErrs = []
     pointsX = []
@@ -166,7 +166,7 @@ def calcPoseReprojectionThresholds(translationVec, rotationVec, camera, featureM
     return reprErrs
 
 def calcPoseReprojectionRMSEThreshold(translationVec, rotationVec, camera, featureModel, showImg=False):
-    rotMat = R.from_rotvec(rotationVec).as_dcm()
+    rotMat = R.from_rotvec(rotationVec).as_matrix()
 
     reprErrs = []
     pointsX = []

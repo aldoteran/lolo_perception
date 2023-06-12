@@ -6,13 +6,16 @@ import yaml
 class Camera:
     # https://stackoverflow.com/questions/11140163/plotting-a-3d-cube-a-sphere-and-a-vector-in-matplotlib
     def __init__(self, cameraMatrix, distCoeffs, projectionMatrix=None, resolution=None):
-        self.cameraMatrix = cameraMatrix
-        
+
+        self.cameraMatrix = np.ascontiguousarray(cameraMatrix[:,:3]) # due to some OpenCV issues in newer versions
+
         self.distCoeffs = distCoeffs
         self.resolution = resolution # maybe change resolution to be (width, height) instead of (height, width)
 
         self.projectionMatrix = projectionMatrix
         self.roi = None
+
+
         if projectionMatrix is None:
             if resolution is not None:
                 h, w = self.resolution
