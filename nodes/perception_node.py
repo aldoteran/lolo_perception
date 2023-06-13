@@ -41,6 +41,7 @@ class PerceptionNode:
         # FIXME(aldoteran): gonna switch btwn images till we find the station.
         self.right_image_topic = rospy.get_param("~right_image_topic")
         self.left_image_topic = rospy.get_param("~left_image_topic")
+        self.front_image_topic = rospy.get_param("~front_image_topic")
         # Start with right camera.
         self.imgSubscriber = rospy.Subscriber(self.right_image_topic, Image, self._imgCallback)
         # Flag to know whether its the right camera we're using/
@@ -68,9 +69,11 @@ class PerceptionNode:
         # sed in perception.py to update the estimated pose (estDSPose) for better prediction of the ROI
         self._cameraPoseMsg = None
         self.cameraPoseSub = rospy.Subscriber("lolo/camera/pose", PoseWithCovarianceStamped, self._cameraPoseSub)
-
+        self.imgSubscriber = rospy.Subscriber(self.front_image_topic,
+                                             Image, self._imgCallback)
+        self.camera_frame_id = "sam/camera_front_link"
         # FIXME(aldoteran): track the current frame_id being used.
-        self.camera_frame_id = "sam/camera_front_right_link/perception"
+        # self.camera_frame_id = "sam/camera_front_right_link/perception"
 
         print("[PNode] end init")
 
@@ -288,7 +291,7 @@ if __name__ == '__main__':
 
     #parser = argparse.ArgumentParser(description='Perception node')
     #parser.add_argument('-feature_model_yaml', type=str, default="big_prototype_5.yaml",
-    #                    help='')
+    #                    help='')""
 
     #args = parser.parse_args()
 
