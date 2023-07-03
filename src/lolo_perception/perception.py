@@ -138,7 +138,7 @@ class Perception:
         self.startStage = 4 # 1 or 4
         self.stage = self.startStage
         self.stage2Iterations = 15#15 # Tracking light sources for this amount of frames
-        self.stage4Iterations = 10 # Acquiring pose for this amount of frames
+        self.stage4Iterations = 1 # Acquiring pose for this amount of frames
 
         # Access images from perception_node
         self.processedImg = None

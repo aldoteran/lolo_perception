@@ -23,7 +23,7 @@
 
     <param name="right_image_topic" value="/sam/payload/cam_starboard/image_raw"/>
     <param name="left_image_topic" value="/sam/payload/cam_port/image_raw"/>
-    <param name="front_image_topic" value="/sam/payload/cam_front/image_raw"/>
+    <param name="front_image_topic" value="/sam/payload/cam_forward/image_raw"/>
     <remap from="/lolo_camera/camera_info" to="/sam/payload/cam_port/camera_info"/>
     
     
