@@ -161,3 +161,6 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# Calibration images
+camera_calibration_data/*.png
