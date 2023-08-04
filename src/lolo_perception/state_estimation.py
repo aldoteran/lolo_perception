@@ -165,7 +165,7 @@ class DSPoseEstimator:
 
         if not success:
             input("DIDNT SUCCEED")
-        rotationMatrix = R.from_rotvec(rotationVector[:, 0]).as_dcm()
+        rotationMatrix = R.from_rotvec(rotationVector[:, 0]).as_matrix()
         translation, rotation = self._filterPose(translationVector[:, 0], rotationMatrix)
         translation, rotation, vel = self._estimateDsState(translation, rotation, dt)
         
@@ -174,21 +174,21 @@ class DSPoseEstimator:
         self.dsVelocity = vel
         #return translationVector[:, 0], rotationVector[:, 0]
 
-        ay, ax, az = R.from_dcm(self.dsRotation).as_euler("YXZ")
+        ay, ax, az = R.from_matrix(self.dsRotation).as_euler("YXZ")
         if self.ignorePitch:
             ax = 0
         if self.ignoreRoll:
             az = 0
-        self.dsRotation = R.from_euler("YXZ", (ay, ax, az)).as_dcm()
+        self.dsRotation = R.from_euler("YXZ", (ay, ax, az)).as_matrix()
         #if self.ignoreRoll and self.ignorePitch:
-        #    ay, ax, az = R.from_dcm(self.dsRotation).as_euler("YXZ")
-        #    self.dsRotation = R.from_euler("YXZ", (ay, 0, 0)).as_dcm()
+        #    ay, ax, az = R.from_matrix(self.dsRotation).as_euler("YXZ")
+        #    self.dsRotation = R.from_euler("YXZ", (ay, 0, 0)).as_matrix()
         #if self.ignoreRoll and not self.ignorePitch:
-        #    ay, az, ax = R.from_dcm(self.dsRotation).as_euler("YZX")
-        #    self.dsRotation = R.from_euler("YZX", (ay, 0, ax)).as_dcm()
+        #    ay, az, ax = R.from_matrix(self.dsRotation).as_euler("YZX")
+        #    self.dsRotation = R.from_euler("YZX", (ay, 0, ax)).as_matrix()
          # remove roll info
 
-        return self.dsTranslation, R.from_dcm(self.dsRotation).as_rotvec(), poseCov
+        return self.dsTranslation, R.from_matrix(self.dsRotation).as_rotvec(), poseCov
 
 
 if __name__ =="__main__":

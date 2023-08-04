@@ -21,13 +21,15 @@ from lolo_perception.perception import Perception
 
 class PerceptionNode:
     def __init__(self, featureModel, hz, cvShow=False, hatsMode="valley"):
+        print("Perception Node Lolo Package")
         self.cameraTopic = "lolo_camera"
-        self.cameraInfoSub = rospy.Subscriber("lolo_camera/camera_info", CameraInfo, self._getCameraCallback)
+        self.cameraInfoSub = rospy.Subscriber("lolo_camera/camera_info", CameraInfo, self._getCameraCallback, queue_size=1)
         self.camera = None
         while not rospy.is_shutdown() and self.camera is None:
             print("Waiting for camera info to be published")
             rospy.sleep(1)
 
+        print("[PNode] after while")
         self.hz = hz
         self.cvShow = cvShow
 
@@ -39,10 +41,11 @@ class PerceptionNode:
         # FIXME(aldoteran): gonna switch btwn images till we find the station.
         self.right_image_topic = rospy.get_param("~right_image_topic")
         self.left_image_topic = rospy.get_param("~left_image_topic")
+        self.front_image_topic = rospy.get_param("~front_image_topic")
         # Start with right camera.
-        self.imgSubscriber = rospy.Subscriber(self.right_image_topic, Image, self._imgCallback)
-        # Flag to know whether its the right camera we're using/
-        self.is_right_image = True
+        # self.imgSubscriber = rospy.Subscriber(self.right_image_topic, Image, self._imgCallback, queue_size=1)
+        # # Flag to know whether its the right camera we're using/
+        # self.is_right_image = True
 
         # publish some images for visualization
         self.imgProcPublisher = rospy.Publisher('lolo_camera/image_processed', Image, queue_size=1)
@@ -54,7 +57,7 @@ class PerceptionNode:
 
         # publish estimated pose
         self.posePublisher = rospy.Publisher('docking_station/feature_model/estimated_pose', PoseWithCovarianceStamped, queue_size=1)
-        self.camPosePublisher = rospy.Publisher('lolo_camera/estimated_pose', PoseWithCovarianceStamped, queue_size=10)
+        self.camPosePublisher = rospy.Publisher('lolo_camera/estimated_pose', PoseWithCovarianceStamped, queue_size=1)
         self.mahalanobisDistPub = rospy.Publisher('docking_station/feature_model/estimated_pose/maha_dist', Float32, queue_size=1)
 
         # publish transform of estimated pose
@@ -65,10 +68,14 @@ class PerceptionNode:
 
         # sed in perception.py to update the estimated pose (estDSPose) for better prediction of the ROI
         self._cameraPoseMsg = None
-        self.cameraPoseSub = rospy.Subscriber("lolo/camera/pose", PoseWithCovarianceStamped, self._cameraPoseSub)
-
+        self.cameraPoseSub = rospy.Subscriber("lolo/camera/pose", PoseWithCovarianceStamped, self._cameraPoseSub, queue_size=1)
+        self.imgSubscriber = rospy.Subscriber(self.front_image_topic,
+                                             Image, self._imgCallback, queue_size=1)
+        self.camera_frame_id = "sam/camera_front_link"
         # FIXME(aldoteran): track the current frame_id being used.
-        self.camera_frame_id = "sam/camera_front_right_link/perception"
+        # self.camera_frame_id = "sam/camera_front_right_link/perception"
+
+        print("[PNode] end init")
 
     def _getCameraCallback(self, msg):
         """
@@ -200,21 +207,21 @@ class PerceptionNode:
             self.associatedImagePointsPublisher.publish(lightSourcesToMsg(candidates, timeStamp=timeStamp))
 
         # FIXME(aldot): Switch camera if no detection was done.
-        if not poseAquired:
-            # Unregister and resubscribe to other image topic.
-            self.imgSubscriber.unregister()
-            if self.is_right_image:
-                rospy.loginfo("Could not find DS on right camera, switching to left...")
-                self.imgSubscriber = rospy.Subscriber(self.left_image_topic,
-                                             Image, self._imgCallback)
-                self.camera_frame_id = "sam/camera_front_left_link/perception"
-                self.is_right_image = False
-            else:
-                rospy.loginfo("Could not find DS on left camera, switching to right...")
-                self.imgSubscriber = rospy.Subscriber(self.right_image_topic,
-                                             Image, self._imgCallback)
-                self.camera_frame_id = "sam/camera_front_right_link/perception"
-                self.is_right_image = True
+        # if not poseAquired:
+        #     # Unregister and resubscribe to other image topic.
+        #     self.imgSubscriber.unregister()
+        #     if self.is_right_image:
+        #         rospy.loginfo("Could not find DS on right camera, switching to left...")
+        #         self.imgSubscriber = rospy.Subscriber(self.left_image_topic,
+        #                                      Image, self._imgCallback)
+        #         self.camera_frame_id = "sam/camera_front_left_link/perception"
+        #         self.is_right_image = False
+        #     else:
+        #         rospy.loginfo("Could not find DS on left camera, switching to right...")
+        #         self.imgSubscriber = rospy.Subscriber(self.right_image_topic,
+        #                                      Image, self._imgCallback)
+        #         self.camera_frame_id = "sam/camera_front_right_link/perception"
+        #         self.is_right_image = True
 
         return dsPose, poseAquired, candidates
 
@@ -227,7 +234,7 @@ class PerceptionNode:
         estDSPose = None
 
         while not rospy.is_shutdown():
-
+            
             if self.imageMsg:
                 try:
                     imgColor = self.bridge.imgmsg_to_cv2(self.imageMsg, 'bgr8')
@@ -284,7 +291,7 @@ if __name__ == '__main__':
 
     #parser = argparse.ArgumentParser(description='Perception node')
     #parser.add_argument('-feature_model_yaml', type=str, default="big_prototype_5.yaml",
-    #                    help='')
+    #                    help='')""
 
     #args = parser.parse_args()
 

@@ -57,7 +57,7 @@ def rotvecFromMat(rotMat):
     return rVecNew
 
 def projectPoints2(tVec, rVec, cameraMatrix, objectPoints):
-    rotMat = R.from_rotvec(rVec).as_dcm()
+    rotMat = R.from_rotvec(rVec).as_matrix()
     points3D = np.matmul(rotMat, objectPoints.transpose()).transpose() + tVec
     imgPoints = np.matmul(cameraMatrix, points3D.transpose()).transpose()
     imgPoints[:, :] /= imgPoints[:, [-1]]
@@ -165,7 +165,7 @@ def objectJacobianLie(cameraMatrix, tVec, rVec, objectPoints, method="global"):
 
             # rotation: -R[p]_x
             X, Y, Z = p
-            rotMat = R.from_rotvec(rVec).as_dcm()
+            rotMat = R.from_rotvec(rVec).as_matrix()
             skewX = np.array([[0, -Z, Y],
                               [Z, 0, -X],
                               [-Y, X, 0]])
@@ -224,7 +224,7 @@ def objectJacobianOpenCV(cameraMatrix, tVec, rVec, objectPoints, returnOpenCV=Fa
         Jt = [[fx/Z, 0, -fx*X/Z**2],
               [0, fy/Z, -fy*Y/Z**2]]
 
-        rotMat = R.from_rotvec(rVec).as_dcm()
+        rotMat = R.from_rotvec(rVec).as_matrix()
         theta = np.linalg.norm(rVec)
 
         # this is the correct one (similar to right multiply)
@@ -259,7 +259,7 @@ def objectJacobianOpenCV2(cameraMatrix, tVec, rVec, objectPoints, mode="right"):
         Jt = [[fx/Z, 0, -fx*X/Z**2],
               [0, fy/Z, -fy*Y/Z**2]]
 
-        rotMat = R.from_rotvec(rVec).as_dcm()
+        rotMat = R.from_rotvec(rVec).as_matrix()
         theta = np.linalg.norm(rVec)
 
         # Eq (143) in micro theory

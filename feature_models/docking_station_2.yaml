@@ -1,0 +1,8 @@
+model_name: docking_station_2
+features: [[0, 0, -0.44], # Center.
+           [-0.26, -0.42, 0.0], # Top left.
+           [0.27, -0.42, 0.0], # Top right.
+           [0.27, 0.23, 0.0], # Botttom right.
+           [-0.26, 0.23, 0.0]] # Bottom left.
+placement_uncertainty: 0.015 # default uncertainty will be used if 0 (check feature_model/FeatureModel)
+detection_tolerance: 0 # default uncertainty will be used if 0 (check feature_model/FeatureModel)

@@ -41,7 +41,8 @@ class FeatureModel:
         self.name = name
         
         self.features = features
-        rotMat = R.from_euler("XYZ", euler).as_dcm()
+        r = R.from_euler("XYZ", euler)
+        rotMat = r.as_matrix()
         self.features = np.matmul(rotMat, self.features[:, :3].transpose()).transpose()
         self.features = self.features[:, :3].copy() # Don't need homogenious
 
@@ -112,9 +113,9 @@ if __name__ == "__main__":
     ax.scatter(*zip(*featurePoints))
 
     l = fm.maxRad
-    xAxis = r.as_dcm()[:, 0]*l
-    yAxis = r.as_dcm()[:, 1]*l
-    zAxis = r.as_dcm()[:, 2]*l
+    xAxis = r.as_matrix()[:, 0]*l
+    yAxis = r.as_matrix()[:, 1]*l
+    zAxis = r.as_matrix()[:, 2]*l
 
     ax.plot(*zip(xAxis, [0]*3), color="r")
     ax.plot(*zip(yAxis, [0]*3), color="g")

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import time
 import cv2 as cv
 import numpy as np
@@ -42,12 +42,12 @@ class AdaptiveThreshold:
 
     def process(self, img):
         ret, imgTemp = cv.threshold(img, self.threshold, 256, self.thresholdType)
-        _, contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+        contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
 
         while len(contours) < self.nFeatures and self.threshold >= self.thresMin+self.thresInc:
             self.threshold -= self.thresInc
             ret, imgTemp = cv.threshold(img, self.threshold, 256, self.thresholdType)
-            _, contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+            contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
 
         self.img = imgTemp
         return imgTemp
@@ -73,13 +73,13 @@ class AdaptiveErode:
             i += 1
             imgTemp = cv.morphologyEx(img.copy(), cv.MORPH_OPEN, self.kernel, iterations=i)
             #imgTemp = cv.morphologyEx(img.copy(), cv.MORPH_ERODE, self.kernel, iterations=i)
-            _, contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+            contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
 
         if len(contours) < self.nFeatures:
             i -= 1
             imgTemp = cv.morphologyEx(img.copy(), cv.MORPH_OPEN, self.kernel, iterations=i)
             #imgTemp = cv.morphologyEx(img.copy(), cv.MORPH_ERODE, self.kernel, iterations=i)
-            _, contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+            contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
             f = lambda cnt, img: contourAveragePixelIntensity(cnt, img)
             contours.sort(key=f, reverse=True)
             #avgPixelInt = contourAveragePixelIntensity(cnt, img)
@@ -100,7 +100,7 @@ class AdaptiveErode:
         # this removes reflections effectively at close distances but reduces range
 
         imgTemp = img.copy()
-        _, contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+        contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
         i = self.iterations
 
 
@@ -119,7 +119,7 @@ class AdaptiveErode:
             i += 1
             #imgTemp = cv.morphologyEx(img.copy(), cv.MORPH_OPEN, self.kernel, iterations=i)
             imgTemp = cv.morphologyEx(img.copy(), cv.MORPH_ERODE, self.kernel, iterations=i)
-            _, contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+            contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
 
         contours.sort(key=contourRatio, reverse=True)
 
@@ -156,18 +156,18 @@ class AdaptiveOpen:
 
         i = self.iterations
         imgTemp = cv.morphologyEx(img.copy(), cv.MORPH_OPEN, self.kernel, iterations=i)
-        _, contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+        contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
         while len(contours) >= (self.nFeatures+self.extraContours) and i < self.maxIter:
             i += 1
             # doesnt really matter if open or erode is used?
             imgTemp = cv.morphologyEx(img.copy(), cv.MORPH_OPEN, self.kernel, iterations=i)
-            _, contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+            contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
 
         while len(contours) < self.nFeatures and i > 0:
             i -= 1
             # doesnt really matter if open or erode is used?
             imgTemp = cv.morphologyEx(img.copy(), cv.MORPH_OPEN, self.kernel, iterations=i)
-            _, contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+            contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
 
         self.iterations = max(i, 0) # save to we don't have to try next time
         img = imgTemp
@@ -192,7 +192,7 @@ class AdaptiveErodeKernel:
 
     def process(self, img):
         # this removes reflections effectively at close distances but reduces range
-        _, contours, hier = cv.findContours(img, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+        contours, hier = cv.findContours(img, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
         contours.sort(key=contourRatio, reverse=True)
 
         imgTemp = img.copy()
@@ -201,7 +201,7 @@ class AdaptiveErodeKernel:
             # doesnt really matter if open or erode is used?
             kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (i, i))
             imgTemp = cv.morphologyEx(img.copy(), cv.MORPH_OPEN, kernel)
-            _, contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+            contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
             #contours = removeContoursOnEdges(contours)
             #contours.sort(key=contourRatio, reverse=True)
             i += 1
@@ -212,7 +212,7 @@ class AdaptiveErodeKernel:
             # doesnt really matter if open or erode is used?
             kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (i, i))
             imgTemp = cv.morphologyEx(img.copy(), cv.MORPH_OPEN, kernel)
-            _, contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+            contours, hier = cv.findContours(imgTemp, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
             #contours = removeContoursOnEdges(contours)
             #contours.sort(key=contourRatio, reverse=True)
 
@@ -242,7 +242,7 @@ def circularKernel(size):
     size - radius of circle
     """
     assert size % 2 == 1, "Must be of uneven size"
-    radius = size/2
+    radius = int(size/2)
     center = (radius, radius)
     kernel = np.zeros((size, size), dtype=np.uint8)
     cv.circle(kernel, center, radius, 1, -1)
@@ -250,7 +250,7 @@ def circularKernel(size):
     return kernel
 
 def fillContours(img, ratio):
-    _, contours, hier = cv.findContours(img, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+    contours, hier = cv.findContours(img, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
 
     for cnt in contours:
         r = contourRatio(cnt)
@@ -262,7 +262,7 @@ def fillContours(img, ratio):
     return img
 
 def fillContoursOnEdges(img):
-    _, contours, hier = cv.findContours(img, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+    contours, hier = cv.findContours(img, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
     cv.fillPoly(img, contoursOnEdges(contours, img.shape), color=(0, 0, 0))
     return img
 
@@ -346,7 +346,7 @@ def medianContourArea(contours):
     return np.median(contourAreas)
 
 def medianContourAreaFromImg(img):
-    _, contours, hier = cv.findContours(img, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+    contours, hier = cv.findContours(img, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
     return medianContourArea(contours)
 
 def removeNeighbouringContours(contours, minDist, key):
@@ -378,7 +378,7 @@ def removeNeighbouringContoursFromImg(img, minDist, key):
     """
     Removes neighbouring contours by filling erased contours with black
     """
-    _, contours, hier = cv.findContours(img, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+    contours, hier = cv.findContours(img, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
     newContours = removeNeighbouringContours(contours, minDist, key)
     newImg = np.zeros(img.shape, dtype=np.uint8)
     cv.drawContours(newImg, newContours, -1, (255, 255, 255), -1)
@@ -466,7 +466,9 @@ def refineCentroidGradient(gray, contours, ksize=3):
 
     return centroids
 
-def RCF((x,y), r, gray):
+def RCF(coord, r, gray):
+    x = coord[0]
+    y = coord[1]
     I = float(gray[y, x])
 
     mask = np.zeros(gray.shape, dtype=np.uint8)
@@ -481,7 +483,7 @@ def RCF((x,y), r, gray):
 
     return rcf
 
-def RCFS((i, j), rStart, gray, rInc=1, drawImg=None):
+def RCFS(pixelCoord, rStart, gray, rInc=1, drawImg=None):
     """
     Computes the sum of neighbouring pixels at radius R
     Based on section 4.2 in https://www.tdx.cat/bitstream/handle/10803/275990/tmmm1de1.pdf?sequence=5
@@ -494,6 +496,9 @@ def RCFS((i, j), rStart, gray, rInc=1, drawImg=None):
     """
     assert rStart >= 1, "Start radius must be larger than 1"
 
+    i = pixelCoord[0]
+    j = pixelCoord[1]
+    
     def continueCondition(rcfs, maxDiff, n):
         # when the last n samples has had a slope lesser than maxDiff
         # we break
@@ -519,7 +524,7 @@ def RCFS((i, j), rStart, gray, rInc=1, drawImg=None):
     maxDiff = 0#RCF((i,j), r, gray.copy())
     n = 6
     while continueCondition(rcfs, maxDiff, n):
-        rcf = RCF((i,j), r, gray.copy())
+        rcf = RCF([i,j], r, gray.copy())
 
         if rcfs:
             diff = rcf - rcfs[-1]
@@ -666,7 +671,7 @@ def localMin(gray, kernel):
 
 
 def findContourAt(gray, center):
-    _, contours, hier = cv.findContours(gray, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+    contours, hier = cv.findContours(gray, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 
     contours.sort(key=cv.contourArea, reverse=True)
 
@@ -701,13 +706,13 @@ def findContourAt(gray, center):
     return foundCnt
 
 def findPeakContourAt(gray, center, offset=None, mode=cv.RETR_EXTERNAL):
-    _, contours, hier = cv.findContours(gray, mode, cv.CHAIN_APPROX_SIMPLE)
+    contours, hier = cv.findContours(gray, mode, cv.CHAIN_APPROX_SIMPLE)
 
 
     if offset is None:
         contoursOffset = [cnt for cnt in contours]
     else:
-        _, contoursOffset, hier = cv.findContours(gray, mode, cv.CHAIN_APPROX_SIMPLE, offset=offset)
+        contoursOffset, hier = cv.findContours(gray, mode, cv.CHAIN_APPROX_SIMPLE, offset=offset)
 
     #contours.sort(key=cv.contourArea, reverse=True)
     #contoursOffset.sort(key=cv.contourArea, reverse=True)
@@ -1059,12 +1064,12 @@ def findNLocalMax(gray, kernel, p, n, margin=1, offset=(0,0), drawImg=None, draw
     peakCenters = []
     peakContours = []
 
-    _, contours, hier = cv.findContours(gray, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+    contours, hier = cv.findContours(gray, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 
     if offset is None:
         contoursOffset = [cnt for cnt in contours]
     else:
-        _, contoursOffset, hier = cv.findContours(gray, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE, offset=offset)
+        contoursOffset, hier = cv.findContours(gray, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE, offset=offset)
 
     contoursOffset.sort(key=lambda cnt: contourMaxPixelIntensity(gray, cnt), reverse=True)
 
@@ -2106,7 +2111,7 @@ class ThresholdFeatureExtractor:
         img = self.pHold.process(img)
         #img = fillContoursOnEdges(img) # All contours connected to the edges are background
 
-        _, contours, hier = cv.findContours(img, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+        contours, hier = cv.findContours(img, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
         if drawImg is not None:
             cv.drawContours(drawImg, contours, -1, (0, 0, 255), 3)
 
@@ -2116,7 +2121,7 @@ class ThresholdFeatureExtractor:
 
         img = self.adaOpen.process(img) # removes noise
 
-        _, contoursNew, hier = cv.findContours(img, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+        contoursNew, hier = cv.findContours(img, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
         if drawImg is not None: cv.drawContours(drawImg, contoursNew, -1, (0, 255, 0), 3)
 
         # error: The truth value of an array with more than one element is ambiguous
@@ -2299,7 +2304,7 @@ class AdaptiveThreshold2:
         self.threshold = np.max(img)
 
         ret, imgTemp = cv.threshold(img, self.threshold, upper, self.thresholdType)
-        _, contours, hier = cv.findContours(imgTemp, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+        contours, hier = cv.findContours(imgTemp, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
         candidates = self._calcCandidates(contours)
 
         img = img.copy()
@@ -2316,7 +2321,7 @@ class AdaptiveThreshold2:
 
             ret, imgTemp = cv.threshold(img, self.threshold, upper, self.thresholdType)
 
-            _, contours, hier = cv.findContours(imgTemp, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+            contours, hier = cv.findContours(imgTemp, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
             candidates = self._calcCandidates(contours)
 
         # print("HATS iterations: {}".format(i))
@@ -2325,7 +2330,7 @@ class AdaptiveThreshold2:
         if self.marginPercentage > 0:
             self.threshold = (1-self.marginPercentage)*self.threshold
             ret, imgTemp = cv.threshold(img, self.threshold, upper, self.thresholdType)
-            _, contours, hier = cv.findContours(imgTemp, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+            contours, hier = cv.findContours(imgTemp, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
             candidates = self._calcCandidates(contours)
 
         self.img = imgTemp
@@ -2458,7 +2463,7 @@ class ModifiedHATS:
                 self.threshold = np.max(img)-1
 
         ret, imgTemp = cv.threshold(img, self.threshold, upper, self.thresholdType)
-        _, contours, hier = cv.findContours(imgTemp, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+        contours, hier = cv.findContours(imgTemp, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
         candidates, removedCandidates = self._calcCandidates(contours)
 
         img = img.copy()
@@ -2476,13 +2481,13 @@ class ModifiedHATS:
 
             ret, imgTemp = cv.threshold(img, self.threshold, upper, self.thresholdType)
 
-            _, contours, hier = cv.findContours(imgTemp, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+            contours, hier = cv.findContours(imgTemp, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
             candidates, removedCandidates = self._calcCandidates(contours)
 
         if self.peakMargin > 0 and len(histPeaks) > 0:
             self.threshold = histPeaks.pop()-1
             ret, imgTemp = cv.threshold(img, self.threshold, upper, self.thresholdType)
-            _, contours, hier = cv.findContours(imgTemp, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+            contours, hier = cv.findContours(imgTemp, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
             candidates, removedCandidates = self._calcCandidates(contours)
 
         # print("HATS iterations: {}".format(i))
@@ -2777,7 +2782,7 @@ class LocalMaxHATS:
 
         upper = 256
         ret, imgTemp = cv.threshold(imgGray, self.threshold, upper, cv.THRESH_BINARY)
-        _, contours, hier = cv.findContours(imgTemp, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+        contours, hier = cv.findContours(imgTemp, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
         candidates = self._calcCandidates(gray, [LightSource(cnt+offset, self.threshold+1) for cnt in contours], offset, drawImg=drawImg)
         cv.drawContours(imgGray, [ls.cnt-offset for ls in candidates], -1, (0), -1)
 
@@ -2794,7 +2799,7 @@ class LocalMaxHATS:
                 break
 
             ret, imgTemp = cv.threshold(imgGray, self.threshold, upper, cv.THRESH_BINARY)
-            _, contours, hier = cv.findContours(imgTemp, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+            contours, hier = cv.findContours(imgTemp, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
             lightSources = [LightSource(cnt +offset, self.threshold+1) for cnt in contours]
             newCandidates = self._calcCandidates(gray, lightSources, offset, drawImg=drawImg)
             candidates.extend(newCandidates)

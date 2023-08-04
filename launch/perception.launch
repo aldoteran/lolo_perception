@@ -10,7 +10,7 @@
   <arg name="sam" default="true"/>
 
   <!--Some parameters for the perception node-->
-  <arg name="feature_model_yaml" default="visual_docking_station.yaml" />
+  <arg name="feature_model_yaml" default="docking_station_2.yaml" />
   <arg name="hats_mode" default="valley" /> <!--peak, valley or simple-->
 
   <node name="perception_node" pkg="lolo_perception" type="perception_node.py" output="screen" >
@@ -21,9 +21,15 @@
     <param name="hats_mode" value="$(arg hats_mode)"/>
     <param name="pose_feedback" value="$(arg pose_feedback)"/>
 
-    <param name="right_image_topic" value="/sam/perception/csi_cam_1/camera/image_color"/>
+    <param name="right_image_topic" value="/sam/payload/cam_starboard/image_raw"/>
+    <param name="left_image_topic" value="/sam/payload/cam_port/image_raw"/>
+    <param name="front_image_topic" value="/sam/payload/cam_forward/image_raw"/>
+    <remap from="/lolo_camera/camera_info" to="/sam/payload/cam_port/camera_info"/>
+    
+    
+    <!-- <param name="right_image_topic" value="/sam/perception/csi_cam_1/camera/image_color"/>
     <param name="left_image_topic" value="/sam/perception/csi_cam_2/camera/image_color"/>
-    <remap from="/lolo_camera/camera_info" to="/sam/perception/csi_cam_1/camera/camera_info"/>
+    <remap from="/lolo_camera/camera_info" to="/sam/perception/csi_cam_1/camera/camera_info"/> -->
 
     <!--<remap from="/lolo_camera/image_rect_color"-->
         <!--to="/sam/perception/csi_cam_2/throttled/image_rect_color" if="$(eval arg('sam') == true)"/>-->

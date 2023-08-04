@@ -10,7 +10,7 @@ import os
 import rospkg
 
 def vectorToPose(frameID, translationVector, rotationVector, covariance, timeStamp=None):
-    rotMat = R.from_rotvec(rotationVector).as_dcm()
+    rotMat = R.from_rotvec(rotationVector).as_matrix()
     rotMatHom = np.hstack((rotMat, np.zeros((3, 1))))
     rotMatHom = np.vstack((rotMatHom, np.array([0, 0, 0, 1])))
     q = quaternion_from_matrix(rotMatHom)
@@ -29,7 +29,7 @@ def vectorToPose(frameID, translationVector, rotationVector, covariance, timeSta
     return p
 
 def vectorToPoseStamped(frameID, translationVector, rotationVector, timeStamp=None):
-    rotMat = R.from_rotvec(rotationVector).as_dcm()
+    rotMat = R.from_rotvec(rotationVector).as_matrix()
     rotMatHom = np.hstack((rotMat, np.zeros((3, 1))))
     rotMatHom = np.vstack((rotMatHom, np.array([0, 0, 0, 1])))
     q = quaternion_from_matrix(rotMatHom)
@@ -55,7 +55,7 @@ def vectorToTransform(frameID, childFrameID, translationVector, rotationVector, 
     t.transform.translation.y = translationVector[1]
     t.transform.translation.z = translationVector[2]
 
-    rotMat = R.from_rotvec(rotationVector).as_dcm()
+    rotMat = R.from_rotvec(rotationVector).as_matrix()
     rotMatHom = np.hstack((rotMat, np.zeros((3, 1))))
     rotMatHom = np.vstack((rotMatHom, np.array([0, 0, 0, 1])))
     q = quaternion_from_matrix(rotMatHom)
