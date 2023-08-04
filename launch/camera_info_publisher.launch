@@ -11,7 +11,7 @@
 
     <group ns="/sam/perception/camera_left/">
         <param name="calibration_file" type="string"
-            value="$(find lolo_perception)/camera_calibration_data/lab_calibs/camera_1.yaml"/>
+            value="$(find lolo_perception)/camera_calibration_data/lab_calibs/usb_camera_1.yaml"/>
         <param name="camera_link_id" type="string"
             value="/sam/camera_front_left_link"/>
 
@@ -21,7 +21,7 @@
 
     <group ns="/sam/perception/camera_right">
         <param name="calibration_file" type="string"
-            value="$(find lolo_perception)/camera_calibration_data/lab_calibs/camera_2.yaml"/>
+            value="$(find lolo_perception)/camera_calibration_data/lab_calibs/usb_camera_2.yaml"/>
         <param name="camera_link_id" type="string"
             value="/sam/camera_front_right_link"/>
 

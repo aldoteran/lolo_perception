@@ -21,7 +21,7 @@
     <param name="hats_mode" value="$(arg hats_mode)"/>
     <param name="pose_feedback" value="$(arg pose_feedback)"/>
 
-    <param name="right_image_topic" value="/camera2/video_source/raw"/>
+    <param name="right_image_topic" value="/camera1/video_source/raw"/>
     <param name="left_image_topic" value="/camera1/video_source/raw"/>
     <remap from="/lolo_camera/camera_info" to="/sam/perception/camera_right/camera_info"/>
 
