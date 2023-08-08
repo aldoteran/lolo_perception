@@ -18,10 +18,10 @@ def vectorToPose(frameID, translationVector, rotationVector, covariance, timeSta
     p = PoseWithCovarianceStamped()
     p.header.frame_id = frameID
     p.header.stamp = timeStamp if timeStamp else rospy.Time.now()
-    (p.pose.pose.position.x, 
-     p.pose.pose.position.y, 
-     p.pose.pose.position.z) = (translationVector[0], 
-                                translationVector[1], 
+    (p.pose.pose.position.x,
+     p.pose.pose.position.y,
+     p.pose.pose.position.z) = (translationVector[0],
+                                translationVector[1],
                                 translationVector[2])
     p.pose.pose.orientation = Quaternion(*q)
     p.pose.covariance = list(np.ravel(covariance))
@@ -37,10 +37,10 @@ def vectorToPoseStamped(frameID, translationVector, rotationVector, timeStamp=No
     p = PoseStamped()
     p.header.frame_id = frameID
     p.header.stamp = timeStamp if timeStamp else rospy.Time.now()
-    (p.pose.position.x, 
-     p.pose.position.y, 
-     p.pose.position.z) = (translationVector[0], 
-                                translationVector[1], 
+    (p.pose.position.x,
+     p.pose.position.y,
+     p.pose.position.z) = (translationVector[0],
+                                translationVector[1],
                                 translationVector[2])
     p.pose.orientation = Quaternion(*q)
 
@@ -78,8 +78,8 @@ def poseToVector(pose):
     """
     PoseWithCovarianceStamped -> vector
     """
-    translationVector = np.array([pose.pose.pose.position.x, 
-                                  pose.pose.pose.position.y, 
+    translationVector = np.array([pose.pose.pose.position.x,
+                                  pose.pose.pose.position.y,
                                   pose.pose.pose.position.z])
 
     quat = [pose.pose.pose.orientation.x,
@@ -121,7 +121,7 @@ def featurePointsToMsg(frameId, featurePoints, timeStamp=None):
 def msgToImagePoints(msg):
     imgPoints = []
     for pose in msg.poses:
-        imgPoints.append((int(round(pose.position.x)), 
+        imgPoints.append((int(round(pose.position.x)),
                           int(round(pose.position.y))))
 
     return imgPoints
@@ -130,7 +130,7 @@ def readCameraYaml(cameraYamlPath):
     cameraYamlPath = os.path.join(rospkg.RosPack().get_path("lolo_perception"), cameraYamlPath)
     with open(cameraYamlPath, "r") as file:
         calibData = yaml.load(file)
-    
+
     msg = CameraInfo()
     msg.width = calibData["image_width"]
     msg.height = calibData["image_height"]
